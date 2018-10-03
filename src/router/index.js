@@ -21,7 +21,7 @@ const router = new Router({
       isAuthRequired: true
     }
   }, {
-    path: '/wishlist/:id/',
+    path: '/wishlist/:wishlistId/',
     name: 'Wishlist',
     component: Wishlist,
     meta: {

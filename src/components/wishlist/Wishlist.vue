@@ -4,9 +4,7 @@
     <input type="text" v-model="wishName">
     <button @click="addNewWish" :disabled="wishName === ''">Add new wish</button>
     <ul>
-      <WishlistItem v-for="wish in wishlist.list" :wish="wish" :key="wish">
-        {{wish}}
-      </WishlistItem>
+      <WishlistItem v-for="(wish, index, key) in wishlist.list" :wish="wish" :id="index" :key="key"></WishlistItem>
     </ul>
   </div>
 </template>
@@ -27,7 +25,7 @@ export default {
       wishName: ''
     }
   },
-  props: ['uid'],
+  props: ['wishlistId'],
   components: {
     WishlistItem
   },
@@ -37,25 +35,18 @@ export default {
         id: this.wishlist.id,
         wishName: this.wishName
       }
-      store.dispatch('addWish', data).then(
-        () => {
-          console.log('BIEN')
-          this.updateWishlist()
-        }
-      )
+      store.dispatch('addWish', data)
       this.wishName = ''
     },
     updateWishlist: function () {
-      const wishlist = this.$store.getters.getWishlist(this.uid)
+      const wishlist = this.$store.getters.getWishlist(this.wishlistId)
       this.wishlist.title = wishlist.name
       this.wishlist.list = wishlist.list || []
       this.wishlist.id = wishlist.id
     }
   },
   created: function () {
-    this.updateWishlist()
-  },
-  updated: function () {
+    store.commit('selectWishlist', this.wishlistId)
     this.updateWishlist()
   }
 }

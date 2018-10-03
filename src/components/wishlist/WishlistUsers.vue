@@ -3,7 +3,7 @@
     <ul>
       <li v-for="wishlist in wishlists" :key="wishlist.id">
         <a>
-          <router-link :to="{name:'Wishlist', params: {id: wishlist.id}}">{{wishlist.name}}</router-link>
+          <router-link :to="{name:'Wishlist', params: {wishlistId: wishlist.id}}">{{wishlist.name}}</router-link>
         </a>
       </li>
     </ul>

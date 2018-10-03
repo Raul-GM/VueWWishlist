@@ -1,17 +1,23 @@
 <template>
   <li>
-    {{wish}}
+    <label>{{wish}}</label>
+    <a @click="removeWish(id)">Eliminar</a>
   </li>
 </template>
 <script>
+import store from '../../store'
+
 export default {
   name: 'WishlistItem',
   data () {
     return {
     }
   },
-  props: ['wish'],
+  props: ['wish', 'id'],
   methods: {
+    removeWish: function (id) {
+      store.dispatch('removeWish', id)
+    }
   }
 }
 </script>
