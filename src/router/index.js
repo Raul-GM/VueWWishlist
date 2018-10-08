@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import WishlistUsers from '@/components/wishlist/WishlistUsers'
 import Wishlist from '@/components/wishlist/Wishlist'
+import WishDetail from '@/components/wishlist/WishDetail'
 import Login from '@/components/access/Login'
 import SignUp from '@/components/access/SignUp'
 import firebase from 'firebase'
@@ -24,6 +25,14 @@ const router = new Router({
     path: '/wishlist/:wishlistId/',
     name: 'Wishlist',
     component: Wishlist,
+    meta: {
+      isAuthRequired: true
+    },
+    props: true
+  }, {
+    path: '/wishlist/:wishlistId/wish/:wishId',
+    name: 'WishDetail',
+    component: WishDetail,
     meta: {
       isAuthRequired: true
     },

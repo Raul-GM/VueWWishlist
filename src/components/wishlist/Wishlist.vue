@@ -1,8 +1,21 @@
 <template>
   <div class="wishlist-wrapper">
     <h3>{{wishlist.title}}´s Wishlist</h3>
-    <input type="text" v-model="wishName">
-    <button @click="addNewWish" :disabled="wishName === ''">Add new wish</button>
+    <div>
+      <label for="name">
+        Name:
+        <input type="text" id="name" v-model="newWish.name">
+      </label>
+      <label for="url">
+        URL:
+        <input type="text" id="url" v-model="newWish.URL">
+      </label>
+      <label for="description">
+        Description:
+        <textarea id="description" v-model="newWish.description" />
+      </label>
+      <button @click="addNewWish" :disabled="newWish.name === ''">Add new wish</button>
+    </div>
     <ul>
       <WishlistItem v-for="(wish, index, key) in wishlist.list" :wish="wish" :id="index" :key="key"></WishlistItem>
     </ul>
@@ -22,7 +35,11 @@ export default {
         list: [],
         title: ''
       },
-      wishName: ''
+      newWish: {
+        description: '',
+        name: '',
+        URL: ''
+      }
     }
   },
   props: ['wishlistId'],
@@ -33,20 +50,29 @@ export default {
     addNewWish: function () {
       const data = {
         id: this.wishlist.id,
-        wishName: this.wishName
+        wish: this.newWish
       }
       store.dispatch('addWish', data)
-      this.wishName = ''
+      this.newWish.description = ''
+      this.newWish.name = ''
+      this.newWish.URL = ''
+    },
+    saveSelectedWishlist: function () {
+      const selectedWishlist = {
+        id: this.wishlistId,
+        name: this.wishlist.title
+      }
+      store.commit('selectWishlist', selectedWishlist)
     },
     updateWishlist: function () {
       const wishlist = this.$store.getters.getWishlist(this.wishlistId)
       this.wishlist.title = wishlist.name
       this.wishlist.list = wishlist.list || []
       this.wishlist.id = wishlist.id
+      this.saveSelectedWishlist()
     }
   },
   created: function () {
-    store.commit('selectWishlist', this.wishlistId)
     this.updateWishlist()
   }
 }

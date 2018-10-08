@@ -13,10 +13,16 @@ export default new Vuex.Store({
       nickname: ''
     },
     wishlists: [],
-    wishlistSelected: ''
+    wishlistSelected: {
+      id: '',
+      name: ''
+    },
+    wishSelected: {}
   },
   getters: {
-    getWishlist: (state) => (uid) => state.wishlists.find(wishlist => wishlist.id === uid)
+    getWishlist: (state) => (uid) => state.wishlists.find(wishlist => wishlist.id === uid),
+    getWishlistSelected: (state) => () => state.wishlistSelected,
+    getWishSelected: (state) => () => state.wishSelected
   },
   mutations: {
     cleanWishlists: function (state) {
@@ -26,16 +32,18 @@ export default new Vuex.Store({
       state.wishlists = payload
     },
     removeWish: function (state, payload) {
-      console.log('REMOVE WISH MUTATION')
-      const wishlist = state.wishlists.find(wishlist => wishlist.id === state.wishlistSelected)
-
+      const wishlist = state.wishlists.find(wishlist => wishlist.id === state.wishlistSelected.id)
       Vue.delete(wishlist.list, payload)
     },
     saveWishlists: function (state, payload) {
       state.wishlists.push(payload)
     },
+    selectWish: function (state, payload) {
+      state.wishSelected = payload
+    },
     selectWishlist: function (state, payload) {
-      state.wishlistSelected = payload
+      state.wishlistSelected.id = payload.id
+      state.wishlistSelected.name = payload.name
     },
     setUserData: function (state, payload) {
       state.user.nickname = payload.nickname
@@ -45,31 +53,36 @@ export default new Vuex.Store({
     },
     updateWishlist: function (state, payload) {
       const wishlist = state.wishlists.find(wishlist => wishlist.id === payload.id)
-      if (!wishlist.list) {
-        Vue.set(wishlist, 'list', {})
-      }
-      Vue.set(wishlist.list, payload.wishlist, payload.wishName)
+      Vue.set(wishlist.list, payload.wishlist, payload.wish)
     }
   },
   actions: {
     addWish: function (context, payload) {
       const {
         id,
-        wishName
+        wish
       } = payload
+      const {
+        description,
+        name,
+        URL
+      } = wish
       const database = firebase.database()
       const ref = database.ref(`wishlists/${id}`)
-      ref.child('list').push(wishName).then(
+      ref.child('list').push(wish).then(
         snapshot => {
           context.commit('updateWishlist', {
             id,
             wishlist: snapshot.getRef().getKey(),
-            wishName
+            wish: {
+              description,
+              name,
+              URL
+            }
           })
         },
         err => console.log('ERR=>', err)
       )
-      console.log(wishName)
     },
     fetchUserData: function (context, uid) {
       const database = firebase.database()
@@ -89,7 +102,7 @@ export default new Vuex.Store({
         const wishlist = {
           id: data.getRef().getKey(),
           name: data.val().name,
-          list: data.val().list
+          list: data.val().list || {}
         }
         context.commit('saveWishlists', wishlist)
       })
@@ -116,7 +129,7 @@ export default new Vuex.Store({
     },
     removeWish: function (context, payload) {
       console.log('REMOVE!!! ', payload)
-      const wishlistId = context.state.wishlistSelected
+      const wishlistId = context.state.wishlistSelected.id
       const database = firebase.database()
       const ref = database.ref(`wishlists/${wishlistId}/list`)
       ref.child(payload).remove().then(() => {
