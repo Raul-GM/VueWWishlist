@@ -2,49 +2,61 @@
   <div class="wishlist-wrapper">
     <h3>{{wishlist.title}}´s Wishlist</h3>
     <div>
-      <label for="name">
-        Name:
-        <input type="text" id="name" v-model="newWish.name">
-      </label>
-      <label for="url">
-        URL:
-        <input type="text" id="url" v-model="newWish.URL">
-      </label>
+      <LabeInput :label="'Name'" :id="'name'" :value="newWish.name" @update="(val) => newWish.name = val"></LabeInput>
+      <LabeInput :label="'URL'" :id="'url'" :value="newWish.URL" @update="(val) => newWish.URL = val"></LabeInput>
       <label for="description">
         Description:
         <textarea id="description" v-model="newWish.description" />
       </label>
+      <LabeInput :id="'image'" :label="'Image'" :value="newWish.image" @update="(val) => newWish.image = val"></LabeInput>
+      <LabeInput :id="'price'" :label="'Price'" :value="newWish.price" @update="(val) => newWish.price = val"></LabeInput>
+      <label for="priority">
+        Priority:
+        <input type="range" id="priority" v-model="newWish.priority" min="0" max="10"> {{newWish.priority}}
+      </label>
+      <label for="private">
+        <input type="checkbox" id="private" v-model="newWish.isPrivate"> Private
+      </label>
       <button @click="addNewWish" :disabled="newWish.name === ''">Add new wish</button>
     </div>
     <ul>
-      <WishlistItem v-for="(wish, index, key) in wishlist.list" :wish="wish" :id="index" :key="key"></WishlistItem>
+      <WishlistItem v-if="showItem(wish)" v-for="(wish, index, key) in wishlist.list" :wish="wish" :id="index" :key="key"></WishlistItem>
     </ul>
   </div>
 </template>
 
 <script>
 import WishlistItem from './WishlistItem.vue'
+import LabeInput from './../commons/LabelInput.vue'
+
 import store from '@/store'
 
 export default {
   name: 'Wishlist',
   data () {
     return {
+      newWish: {
+        description: '',
+        image: '',
+        name: '',
+        price: '',
+        priority: 5,
+        private: false,
+        URL: ''
+      },
       wishlist: {
         id: '',
         list: [],
+        owner: '',
         title: ''
       },
-      newWish: {
-        description: '',
-        name: '',
-        URL: ''
-      }
+      uid: ''
     }
   },
   props: ['wishlistId'],
   components: {
-    WishlistItem
+    WishlistItem,
+    LabeInput
   },
   methods: {
     addNewWish: function () {
@@ -54,8 +66,16 @@ export default {
       }
       store.dispatch('addWish', data)
       this.newWish.description = ''
+      this.newWish.image = ''
       this.newWish.name = ''
+      this.newWish.price = ''
+      this.newWish.priority = ''
+      this.newWish.isPrivate = ''
       this.newWish.URL = ''
+    },
+    getUserId: function () {
+      const user = this.$store.getters.getUserData()
+      this.uid = user.uid
     },
     saveSelectedWishlist: function () {
       const selectedWishlist = {
@@ -64,16 +84,23 @@ export default {
       }
       store.commit('selectWishlist', selectedWishlist)
     },
+    showItem: function (wish) {
+      return !(wish.isPrivate && (this.wishlist.owner !== this.uid))
+    },
     updateWishlist: function () {
       const wishlist = this.$store.getters.getWishlist(this.wishlistId)
+      if (!wishlist.list) return
+
       this.wishlist.title = wishlist.name
       this.wishlist.list = wishlist.list || []
       this.wishlist.id = wishlist.id
+      this.wishlist.owner = wishlist.owner
       this.saveSelectedWishlist()
     }
   },
   created: function () {
     this.updateWishlist()
+    this.getUserId()
   }
 }
 </script>

@@ -3,11 +3,14 @@
     <a @click="selectWish()">
       <router-link :to="{name:'WishDetail', params: {wishlistId: this.wishlistSelected.id, wishId: id}}">{{wish.name}}</router-link>
     </a>
-    <a @click="removeWish(id)">Eliminar</a>
+    <a @click="selectWish(true)">
+      <router-link :to="{name:'WishDetail', params: {wishlistId: this.wishlistSelected.id, wishId: id}}">Modify</router-link>
+    </a>
+    <a @click="removeWish(id)">Remove</a>
   </li>
 </template>
 <script>
-import store from '../../store'
+import store from '@/store'
 
 export default {
   name: 'WishlistItem',
@@ -21,7 +24,8 @@ export default {
     removeWish: function (id) {
       store.dispatch('removeWish', id)
     },
-    selectWish: function () {
+    selectWish: function (isModifying) {
+      store.commit('modifyWish', isModifying)
       store.commit('selectWish', this.wish)
     }
   },
