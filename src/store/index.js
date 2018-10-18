@@ -11,6 +11,7 @@ export default new Vuex.Store({
       newWishlistOpened: false
     },
     user: {
+      avatar: '',
       nickname: '',
       uid: ''
     },
@@ -54,6 +55,7 @@ export default new Vuex.Store({
     },
     setUserData: function (state, payload) {
       state.user = {
+        avatar: payload.avatar,
         nickname: payload.nickname,
         uid: payload.uid
       }
@@ -118,6 +120,7 @@ export default new Vuex.Store({
       database.ref(`users/${uid}`).once('value').then(
         snapshot => {
           context.commit('setUserData', {
+            avatar: snapshot.val().avatar,
             nickname: snapshot.val().nickname,
             uid
           })
@@ -141,10 +144,14 @@ export default new Vuex.Store({
     saveUserData: function (context, payload) {
       const database = firebase.database()
       const {
-        uid,
-        nickname
+        avatar,
+        email,
+        nickname,
+        uid
       } = payload
       database.ref(`users/${uid}`).set({
+        avatar,
+        email,
         nickname
       })
     },
@@ -161,6 +168,20 @@ export default new Vuex.Store({
       }, err => {
         console.log('ERR', err)
       })
+    },
+    updateUserData: function (context, payload) {
+      const {
+        avatar,
+        nickname,
+        uid
+      } = payload
+      const database = firebase.database()
+      const ref = database.ref(`users/${uid}`)
+      ref.update({
+        avatar,
+        nickname
+      }).then(() => console.log('OKISSSSS'),
+        err => console.log('ERROR', err))
     },
     createWishlist: function (context, payload) {
       const {

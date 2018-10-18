@@ -2,7 +2,13 @@
   <header>
     <h1>{{header}}</h1>
     <p v-if="user.nickname" class="header-wrapper">
-      <span>Welcome {{user.nickname}}</span>
+      <span>
+        <a>
+          <router-link :to="{name:'User'}">
+            <img class="mini-avatar" v-bind:src="user.avatar"> {{user.nickname}}
+          </router-link>
+        </a>
+      </span>
       <span>
         <a @click="openNewWishlistModal">New wishlist</a>
       </span>
@@ -46,5 +52,9 @@ export default {
 .header-wrapper {
   display: flex;
   justify-content: space-around;
+}
+.mini-avatar {
+  height: 38px;
+  width: 38px;
 }
 </style>

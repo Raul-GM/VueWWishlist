@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+import Login from '@/components/access/Login'
+import SignUp from '@/components/access/SignUp'
+import User from '@/components/user/User'
 import WishlistUsers from '@/components/wishlist/WishlistUsers'
 import Wishlist from '@/components/wishlist/Wishlist'
 import WishDetail from '@/components/wishlist/WishDetail'
-import Login from '@/components/access/Login'
-import SignUp from '@/components/access/SignUp'
+
 import firebase from 'firebase'
 import store from '@/store'
 
@@ -15,9 +18,17 @@ const router = new Router({
     path: '*',
     redirect: '/login'
   }, {
-    path: '/',
-    name: 'WishlistUsers',
-    component: WishlistUsers,
+    path: '/login',
+    name: 'Login',
+    component: Login
+  }, {
+    path: '/sign-up',
+    name: 'SignUp',
+    component: SignUp
+  }, {
+    path: '/user',
+    name: 'User',
+    component: User,
     meta: {
       isAuthRequired: true
     }
@@ -38,13 +49,12 @@ const router = new Router({
     },
     props: true
   }, {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  }, {
-    path: '/sign-up',
-    name: 'SignUp',
-    component: SignUp
+    path: '/',
+    name: 'WishlistUsers',
+    component: WishlistUsers,
+    meta: {
+      isAuthRequired: true
+    }
   }]
 })
 

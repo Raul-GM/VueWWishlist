@@ -14,6 +14,8 @@
 <script>
 import firebase from 'firebase'
 import store from './../../store'
+import IMAGES from './../../constants/index.js'
+
 export default {
   name: 'SignUp',
   data () {
@@ -28,7 +30,13 @@ export default {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(info => {
           console.log('User created', info.user)
-          store.dispatch('saveUserData', { uid: info.user.uid, nickname: this.nickname })
+          const userData = {
+            uid: info.user.uid,
+            nickname: this.nickname,
+            email: this.email,
+            avatar: IMAGES.defaultAvatar
+          }
+          store.dispatch('saveUserData', userData)
         }, err => {
           console.log('ERROR!!', err)
         })
