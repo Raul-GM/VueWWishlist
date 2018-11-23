@@ -136,7 +136,8 @@ export default new Vuex.Store({
           id: data.getRef().getKey(),
           list: data.val().list || {},
           name: data.val().name,
-          owner: data.val().owner
+          owner: data.val().owner,
+          private: data.val().private
         }
         context.commit('saveWishlists', wishlist)
       })
@@ -185,12 +186,15 @@ export default new Vuex.Store({
     },
     createWishlist: function (context, payload) {
       const {
-        wishlistName
+        wishlistName,
+        isPrivate
       } = payload
       const database = firebase.database()
       const child = database.ref().child('wishlists').push()
       child.set({
-        name: wishlistName
+        name: wishlistName,
+        owner: context.state.user.uid,
+        private: isPrivate
       }).then(() => {}, err => console.log('ERROR CREATING WISHLIST', err))
     },
     removeWish: function (context, payload) {

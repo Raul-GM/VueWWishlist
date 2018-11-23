@@ -5,6 +5,9 @@
         <input type="text" placeholder="Name of wishlist owner" v-model="wishlistName">
       </p>
       <p>
+        <span>Private: <input type="checkbox" v-model="isPrivate"></span>
+      </p>
+      <p>
         <button @click="saveWishlist">Create Owner</button>
         <button @click="closeModal">Cancel</button>
       </p>
@@ -19,8 +22,9 @@ import store from '../../store'
 export default {
   data: function () {
     return {
-      wishlistName: '',
-      isModalOpened: false
+      isModalOpened: false,
+      isPrivate: false,
+      wishlistName: ''
     }
   },
   computed: {
@@ -31,7 +35,7 @@ export default {
       store.commit('toggleNewWishlistOpened')
     },
     saveWishlist: function () {
-      store.dispatch('createWishlist', { wishlistName: this.wishlistName })
+      store.dispatch('createWishlist', { wishlistName: this.wishlistName, isPrivate: this.isPrivate })
     }
   }
 }

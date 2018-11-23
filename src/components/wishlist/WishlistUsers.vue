@@ -1,10 +1,11 @@
 <template>
   <div>
     <ul>
-      <li v-for="wishlist in wishlists" :key="wishlist.id">
+      <li v-for="wishlist in wishlists" :key="wishlist.id" v-if="user.uid === wishlist.owner || (user.uid !== wishlist.owner && !wishlist.private)">
         <a>
           <router-link :to="{name:'Wishlist', params: {wishlistId: wishlist.id}}">{{wishlist.name}}</router-link>
         </a>
+        <span v-if="user.uid === wishlist.owner">Private: <input type="checkbox" v-model="wishlist.private"></span>
       </li>
     </ul>
     <NewWishlistModal></NewWishlistModal>
@@ -25,7 +26,7 @@ export default {
 
   },
   computed: {
-    ...mapState(['wishlists'])
+    ...mapState(['wishlists', 'user'])
   },
   created: function () {
     store.dispatch('fetchWishlists')
