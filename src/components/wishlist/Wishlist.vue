@@ -80,7 +80,8 @@ export default {
     saveSelectedWishlist: function () {
       const selectedWishlist = {
         id: this.wishlistId,
-        name: this.wishlist.title
+        name: this.wishlist.title,
+        owner: this.wishlist.owner
       }
       store.commit('selectWishlist', selectedWishlist)
     },

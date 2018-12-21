@@ -3,14 +3,15 @@
     <a @click="selectWish()">
       <router-link :to="{name:'WishDetail', params: {wishlistId: this.wishlistSelected.id, wishId: id}}">{{wish.name}}</router-link>
     </a>
-    <a @click="selectWish(true)">
+    <a v-if="user.uid === wishlistSelected.owner" @click="selectWish(true)">
       <router-link :to="{name:'WishDetail', params: {wishlistId: this.wishlistSelected.id, wishId: id}}">Modify</router-link>
     </a>
-    <a @click="removeWish(id)">Remove</a>
+    <a v-if="user.uid === wishlistSelected.owner" @click="removeWish(id)">Remove</a>
   </li>
 </template>
 <script>
 import store from '@/store'
+import { mapState } from 'vuex'
 
 export default {
   name: 'WishlistItem',
@@ -28,6 +29,9 @@ export default {
       store.commit('modifyWish', isModifying)
       store.commit('selectWish', this.wish)
     }
+  },
+  computed: {
+    ...mapState(['user'])
   },
   created: function () {
     this.wishlistSelected = this.$store.getters.getWishlistSelected()

@@ -5,7 +5,8 @@
         <a>
           <router-link :to="{name:'Wishlist', params: {wishlistId: wishlist.id}}">{{wishlist.name}}</router-link>
         </a>
-        <span v-if="user.uid === wishlist.owner">Private: <input type="checkbox" v-model="wishlist.private"></span>
+        <span v-if="user.uid === wishlist.owner">Private: <input type="checkbox" v-model="wishlist.private" @click="changePrivacy(wishlist)"></span>
+        <a v-if="user.uid === wishlist.owner" @click="removeWishlist(wishlist.id)">Remove</a>
       </li>
     </ul>
     <NewWishlistModal></NewWishlistModal>
@@ -23,7 +24,17 @@ export default {
     NewWishlistModal
   },
   methods: {
-
+    changePrivacy: function (wishlist) {
+      const params = {
+        list: wishlist.id,
+        isPrivate: wishlist.private
+      }
+      store.dispatch('changeWishlistPrivacy', params)
+    },
+    removeWishlist: function (wishlistId) {
+      console.log('REMOVE', wishlistId)
+      store.dispatch('removeWishlist', {wishlistId})
+    }
   },
   computed: {
     ...mapState(['wishlists', 'user'])

@@ -18,7 +18,8 @@ export default new Vuex.Store({
     wishlists: [],
     wishlistSelected: {
       id: '',
-      name: ''
+      name: '',
+      owner: ''
     },
     wishSelected: {}
   },
@@ -50,8 +51,12 @@ export default new Vuex.Store({
       state.wishSelected = payload
     },
     selectWishlist: function (state, payload) {
-      state.wishlistSelected.id = payload.id
-      state.wishlistSelected.name = payload.name
+      const {id, name, owner} = payload
+      state.wishlistSelected = {
+        id,
+        name,
+        owner
+      }
     },
     setUserData: function (state, payload) {
       state.user = {
@@ -71,7 +76,6 @@ export default new Vuex.Store({
       } = payload
       state.wishSelected = wish
       const wishlist = state.wishlists.find(wishlist => wishlist.id === wishlistId)
-      console.log('???? ', wishlist.list[wishId])
       wishlist.list[wishId] = wish
     },
     updateWishlist: function (state, payload) {
@@ -115,6 +119,30 @@ export default new Vuex.Store({
         err => console.log('ERR=>', err)
       )
     },
+    changeWishlistPrivacy: function (context, payload) {
+      const {list, isPrivate} = payload
+      const database = firebase.database()
+      const ref = database.ref(`wishlists/${list}`)
+      ref.update({
+        private: !isPrivate
+      }).then(
+        () => console.log('privacidad cambiada'),
+        err => console.log('Ha habido un error en la operación', err)
+      )
+    },
+    createWishlist: function (context, payload) {
+      const {
+        wishlistName,
+        isPrivate
+      } = payload
+      const database = firebase.database()
+      const child = database.ref().child('wishlists').push()
+      child.set({
+        name: wishlistName,
+        owner: context.state.user.uid,
+        private: isPrivate
+      }).then(() => {}, err => console.log('ERROR CREATING WISHLIST', err))
+    },
     fetchUserData: function (context, uid) {
       const database = firebase.database()
       database.ref(`users/${uid}`).once('value').then(
@@ -141,6 +169,26 @@ export default new Vuex.Store({
         }
         context.commit('saveWishlists', wishlist)
       })
+    },
+    removeWish: function (context, payload) {
+      const wishlistId = context.state.wishlistSelected.id
+      const database = firebase.database()
+      const ref = database.ref(`wishlists/${wishlistId}/list`)
+      ref.child(payload).remove().then(() => {
+        context.commit('removeWish', payload)
+      }, err => {
+        console.log('ERRRRR', err)
+      })
+    },
+    removeWishlist: function (context, payload) {
+      const database = firebase.database()
+      const ref = database.ref(`wishlists/${payload.wishlistId}`)
+      ref.remove().then(
+        () => {
+          console.log('Wishlist removed')
+          context.dispatch('fetchWishlists')
+        },
+        err => console.log('Error al borrar wishlist', err))
     },
     saveUserData: function (context, payload) {
       const database = firebase.database()
@@ -183,29 +231,6 @@ export default new Vuex.Store({
         nickname
       }).then(() => console.log('OKISSSSS'),
         err => console.log('ERROR', err))
-    },
-    createWishlist: function (context, payload) {
-      const {
-        wishlistName,
-        isPrivate
-      } = payload
-      const database = firebase.database()
-      const child = database.ref().child('wishlists').push()
-      child.set({
-        name: wishlistName,
-        owner: context.state.user.uid,
-        private: isPrivate
-      }).then(() => {}, err => console.log('ERROR CREATING WISHLIST', err))
-    },
-    removeWish: function (context, payload) {
-      const wishlistId = context.state.wishlistSelected.id
-      const database = firebase.database()
-      const ref = database.ref(`wishlists/${wishlistId}/list`)
-      ref.child(payload).remove().then(() => {
-        context.commit('removeWish', payload)
-      }, err => {
-        console.log('ERRRRR', err)
-      })
     }
   }
 })

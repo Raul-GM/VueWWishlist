@@ -1,6 +1,10 @@
 <template>
   <header>
-    <h1>{{header}}</h1>
+    <a>
+      <h1>
+        <router-link :to="{name:'WishlistUsers'}">{{header}}</router-link>
+      </h1>
+    </a>
     <p v-if="user.nickname" class="header-wrapper">
       <span>
         <a>
