@@ -1,16 +1,21 @@
 <template>
   <div class="modal-wrapper" :class="{ opened: modals.newWishlistOpened}">
     <div class="modal-container">
-      <p>
-        <input type="text" placeholder="Name of wishlist owner" v-model="wishlistName">
-      </p>
-      <p>
-        <span>Private: <input type="checkbox" v-model="isPrivate"></span>
-      </p>
-      <p>
+      <div class="modal-header">
+        <h4>New Wishlist</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          <input type="text" placeholder="Name of wishlist owner" v-model="wishlistName">
+        </p>
+        <p>
+          <label class="label-checkbox"><span>Private:</span><input type="checkbox" v-model="isPrivate"></label>
+        </p>
+      </div>
+      <div class="modal-footer">
         <button @click="saveWishlist">Create Owner</button>
         <button @click="closeModal">Cancel</button>
-      </p>
+      </div>
     </div>
   </div>
 </template>
@@ -36,15 +41,17 @@ export default {
     },
     saveWishlist: function () {
       store.dispatch('createWishlist', { wishlistName: this.wishlistName, isPrivate: this.isPrivate })
+      this.closeModal()
     }
   }
 }
 </script>
 
-<style>
+<style lang="scss">
+@import 'src/assets/styles/colors';
 .modal-wrapper {
   align-items: center;
-  background-color: hsla(0, 0%, 74%, 0.7);
+  background-color: $translucid-background;
   display: none;
   height: 100vh;
   justify-content: center;
@@ -58,11 +65,23 @@ export default {
 }
 .modal-container {
   align-items: center;
-  background-color: white;
-  display: flex;
+  background-color: $background-color;
+  border: 3px solid $main-color;
+  border-radius: 10px;
+  display: grid;
   flex-direction: column;
-  height: 40vh;
-  justify-content: center;
-  width: 70vw;
+  gap: 10px;
+  grid-template-rows: 40px 1fr 40px;
+  height: 30vh;
+  width: 90vw;
+}
+.modal-header,
+.modal-body {
+  justify-self: center;
+  margin: 0 20px;
+}
+.modal-footer {
+  justify-self: flex-end;
+  margin: 0 14px;
 }
 </style>

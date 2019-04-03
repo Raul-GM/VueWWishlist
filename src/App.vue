@@ -20,13 +20,10 @@ export default {
 }
 </script>
 
-<style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss">
+  @import './assets/styles/reset';
+  @import './assets/styles/fonts';
+  @import './assets/styles/colors';
+  @import './assets/styles/variables';
+  @import './assets/styles/commons';
 </style>

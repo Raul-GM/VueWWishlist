@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <h3>Modify user data</h3>
-    <p>
-      <img v-bind:src="user.avatar" />
+  <div class="section-container flex-column-centered">
+    <h3 class="text-title">Modify user data</h3>
+    <p class="flex-column-centered">
+      <img class="user-wrapper-avatar" v-bind:src="user.avatar" />
       <input type="text" v-model="user.avatar">
     </p>
     <p>
@@ -40,10 +40,13 @@ export default {
 }
 </script>
 
-<style>
-img {
+<style lang="scss">
+  @import 'src/assets/styles/variables';
+
+.user-wrapper-avatar {
   border-radius: 50%;
   height: 120px;
+  padding-bottom: calc(#{$elements-padding-bottom} / 2);
   width: 120px;
 }
 </style>
