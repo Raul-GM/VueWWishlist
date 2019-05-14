@@ -6,6 +6,7 @@ body {
 
 .link {
     color: $main-color;
+    font-weight: 600;
     text-decoration: underline;
     transition: color $transition-fast;
     &:hover {
@@ -14,6 +15,9 @@ body {
 
 }
 
+.action-button {
+    margin-top: 12px;
+}
 .action-icon {
     width: 20px;
 }
@@ -70,6 +74,10 @@ button {
     border-radius: 50px;
     padding: 14px 30px;
     width: 100%;
+    li:last-child .row,
+    li:last-child.row {
+        border-bottom: none;
+    }
     .row {
         * {
             margin-bottom: 0;
@@ -78,10 +86,14 @@ button {
             justify-self: flex-end;
         }
         align-items: center;
+        border-bottom: 1px solid $contrast-color;
         display: grid;
         font-size: 1rem;
         grid-template-columns: 1fr 70px 70px;
-        grid-gap: 4px 0;
+        padding: 8px 0;
+    }
+    .row.two-cells-row {
+        grid-template-columns: 1fr 80px
     }
     .row-action-cell {
         font-size: 0.8rem;
@@ -89,10 +101,10 @@ button {
 }
 .section-container {
     padding: 24px 18px;
-    h3,
-    input[type=text],
-    a,
-    button {
+    .text-title,
+    .text-field,
+    .link,
+    .action-button {
         margin-bottom: $elements-padding-bottom;
     }
 }

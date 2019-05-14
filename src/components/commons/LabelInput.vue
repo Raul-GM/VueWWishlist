@@ -1,7 +1,7 @@
 <template>
-  <label :for="id">
-    <span>{{label}}:</span>
-    <input v-if="!isLabel" type="text" :id="id" v-model="inputValue" :title="value" v-on:input="emitValue">
+  <label :for="id" class="label-container">
+    <span class="label-container--label">{{label}}:</span>
+    <input class="label-container--text" v-if="!isLabel" type="text" :id="id" v-model="inputValue" :title="value" v-on:input="emitValue">
     <span v-if="isLabel">{{value}}</span>
   </label>
 </template>

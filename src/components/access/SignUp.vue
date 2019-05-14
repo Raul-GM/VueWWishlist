@@ -1,10 +1,10 @@
 <template>
   <div class="section-container flex-column-centered">
     <h3 class="text-title">Create New Account</h3>
-    <input v-model="email" type="email" placeholder="Email">
-    <input v-model="nickname" type="text" placeholder="Nickname">
-    <input v-model="password" type="password" placeholder="Password">
-    <button @click="signUp">Sign Up!</button>
+    <input v-model="email" class="text-field" type="email" placeholder="Email">
+    <input v-model="nickname" class="text-field" type="text" placeholder="Nickname">
+    <input v-model="password" class="text-field" type="password" placeholder="Password">
+    <button class="action-button" @click="signUp">Sign Up!</button>
     <a class="link">
       <router-link to="/login">Log in</router-link>
     </a>

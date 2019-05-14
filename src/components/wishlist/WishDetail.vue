@@ -1,33 +1,43 @@
 <template>
-  <div>
-    <h4 v-if="!isModifying">
+  <div class="section-container flex-column-centered wish-detail">
+    <h3 v-if="!isModifying" class="text-title link">
       <a v-bind:href="wishToSave.URL" target="_blank">{{wishToSave.name}}</a>
-    </h4>
-    <div v-if="isModifying">
-      <LabeInput :id="'name'" :label="'Name'" v-model="wishToSave.name" @update="update"></LabeInput>
-      <LabeInput :id="'url'" :label="'URL'" v-model="wishToSave.URL" @update="update"></LabeInput>
-    </div>
-    <img v-bind:src="wishToSave.image" />
-    <input v-if="isModifying" type="text" v-model="wishToSave.image" />
-    <div>
-      <p v-if="!isModifying">{{wishToSave.description}}</p>
-      <textarea v-if="isModifying" v-model="wishToSave.description"></textarea>
-    </div>
-    <div>
-      <LabeInput :id="'price'" :label="'Price'" :isLabel="!isModifying" v-model="wishToSave.price" @update="update"></LabeInput>
-    </div>
-    <div>
-      <LabeInput :id="'priority'" v-if="!isModifying" :label="'Priority'" :isLabel="!isModifying" v-model="wishToSave.priority" @update="update"></LabeInput>
-      <label for="priority" v-if="isModifying">
-        Priority:
-        <input type="range" id="priority" v-model="wishToSave.priority" min="0" max="10"> {{wishToSave.priority}}
+    </h3>
+    <div v-if="isModifying" class="form-container">
+      <LabeInput class="text-field" :id="'name'" :label="'Name'" v-model="wishToSave.name" @update="update"></LabeInput>
+      <LabeInput class="text-field" :id="'url'" :label="'URL'" v-model="wishToSave.URL" @update="update"></LabeInput>
+      <LabeInput class="text-field" :id="'image'" :label="'Image'" v-model="wishToSave.image" @update="update"></LabeInput>
+      <label class="label-whatever-container text-field" for="description">
+        <span>Description:</span>
+        <textarea v-model="wishToSave.description"></textarea>
       </label>
+      <LabeInput class="text-field" :id="'price'" :label="'Price'" :isLabel="!isModifying" v-model="wishToSave.price" @update="update"></LabeInput>
+      <label for="priority" class="label-whatever-container">
+        <span>Priority ({{wishToSave.priority}}):</span>
+        <input type="range" id="priority" v-model="wishToSave.priority" min="0" max="10">
+      </label>
+    </div>
+    <div v-if="!isModifying">
+      <img class="wish-detail_image" alt="Wish image" v-bind:src="wishToSave.image" />
+      <div class="wish-detail_field">
+        <p>{{wishToSave.description}}</p>
+      </div>
+      <div class="wish-detail_field">
+        <LabeInput :id="'priority'" :label="'Priority'" :isLabel="!isModifying" v-model="wishToSave.priority" @update="update"></LabeInput>
+      </div>
+    </div>
+    <div class="wish-detail_field">
       <label for="private">
-        <input type="checkbox" id="private" v-model="wishToSave.isPrivate"> Private
+        <input type="checkbox" :disabled=!isModifying id="private" :value=wishToSave.isPrivate v-model="wishToSave.isPrivate"> Private
       </label>
     </div>
-    <div v-if="isModifying">
+    <div v-if="isModifying" class="wish-detail_field">
       <button @click="saveChanges">Save</button>
+    </div>
+    <div class="wish-detail_field">
+      <button>
+        <router-link :to="{name:'Wishlist', params: {wishlistId: wishlistId}}">Go back</router-link>
+      </button>
     </div>
   </div>
 </template>
@@ -74,5 +84,11 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+.wish-detail_image {
+  width: 60vw;
+}
+.wish-detail_field {
+  margin-top: 6px;
+}
 </style>

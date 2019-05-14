@@ -1,12 +1,18 @@
 <template>
-  <li>
-    <a @click="selectWish()">
+  <li class="row two-cells-row" v-if="showItem(wish)">
+    <a class="link" @click="selectWish()">
       <router-link :to="{name:'WishDetail', params: {wishlistId: this.wishlistSelected.id, wishId: id}}">{{wish.name}}</router-link>
     </a>
-    <a v-if="user.uid === wishlistSelected.owner" @click="selectWish(true)">
-      <router-link :to="{name:'WishDetail', params: {wishlistId: this.wishlistSelected.id, wishId: id}}">Modify</router-link>
-    </a>
-    <a v-if="user.uid === wishlistSelected.owner" @click="removeWish(id)">Remove</a>
+    <span class="row-action-cell">
+      <a class="row-action-cell" v-if="user.uid === wishlistSelected.owner" @click="selectWish(true)">
+        <router-link :to="{name:'WishDetail', params: {wishlistId: this.wishlistSelected.id, wishId: id}}">
+          <img src="../../assets/images/edit-icon.svg" alt="Remove Wish" class="action-icon"/>
+        </router-link>
+      </a>
+      <a class="row-action-cell" v-if="user.uid === wishlistSelected.owner" @click="removeWish(id)">
+        <img src="../../assets/images/recycle-bin.svg" alt="Remove Wish" class="action-icon"/>
+      </a>
+    </span>
   </li>
 </template>
 <script>
@@ -28,6 +34,9 @@ export default {
     selectWish: function (isModifying) {
       store.commit('modifyWish', isModifying)
       store.commit('selectWish', this.wish)
+    },
+    showItem: function (wish) {
+      return !(wish.isPrivate && (this.wishlistSelected.owner !== this.user.uid))
     }
   },
   computed: {
