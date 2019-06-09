@@ -17,10 +17,13 @@
         <input type="range" id="priority" v-model="wishToSave.priority" min="0" max="10">
       </label>
     </div>
-    <div v-if="!isModifying">
+    <div class="flex-column-centered" v-if="!isModifying">
       <img class="wish-detail_image" alt="Wish image" v-bind:src="wishToSave.image" />
       <div class="wish-detail_field">
         <p>{{wishToSave.description}}</p>
+      </div>
+      <div class="wish-detail_field">
+        <LabeInput :id="'price'" :label="'Price'" :isLabel="!isModifying" v-model="wishToSave.price" @update="update"></LabeInput>
       </div>
       <div class="wish-detail_field">
         <LabeInput :id="'priority'" :label="'Priority'" :isLabel="!isModifying" v-model="wishToSave.priority" @update="update"></LabeInput>
@@ -86,7 +89,7 @@ export default {
 
 <style lang="scss">
 .wish-detail_image {
-  width: 60vw;
+  max-width: 50vw;
 }
 .wish-detail_field {
   margin-top: 6px;

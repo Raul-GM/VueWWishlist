@@ -5,10 +5,10 @@
         <h4>New Wishlist</h4>
       </div>
       <div class="modal-body">
-        <p>
+        <p class="modal-body-row">
           <input type="text" placeholder="Name of wishlist owner" v-model="wishlistName">
         </p>
-        <p>
+        <p class="modal-body-row">
           <label class="label-checkbox"><span>Private:</span><input type="checkbox" v-model="isPrivate"></label>
         </p>
       </div>
@@ -73,12 +73,16 @@ export default {
   gap: 10px;
   grid-template-rows: 40px 1fr 40px;
   height: 30vh;
+  min-height: 170px;
   width: 90vw;
 }
 .modal-header,
 .modal-body {
   justify-self: center;
   margin: 0 20px;
+  &-row{
+    margin-bottom: 8px;
+  }
 }
 .modal-footer {
   justify-self: flex-end;

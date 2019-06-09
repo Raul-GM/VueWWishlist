@@ -1,16 +1,14 @@
 <template>
-  <div class="section-container flex-column-centered">
+  <div class="section-container flex-column-centered flex-column-centered">
     <h3 class="text-title">Modify user data</h3>
-    <p class="flex-column-centered">
-      <img class="user-wrapper-avatar" v-bind:src="user.avatar" />
-      <input type="text" v-model="user.avatar">
-    </p>
-    <p>
-      <LabeInput :id="'nickname'" :label="'Name'" v-model="user.nickname" @update="(val) => user.nickname = val"></LabeInput>
-    </p>
-    <p>
-      <button @click="saveUserData">Save</button>
-    </p>
+     <div class="form-container">
+       <div class="flex-column-centered">
+        <img class="user-wrapper-avatar" v-bind:src="user.avatar" />
+        <LabeInput class="text-field" :id="'avatar'" :label="'Avatar'" v-model="user.avatar"></LabeInput>
+        <LabeInput class="text-field" :id="'nickname'" :label="'Name'" v-model="user.nickname" @update="(val) => user.nickname = val"></LabeInput>
+        <button @click="saveUserData">Save</button>
+      </div>
+    </div>
   </div>
 </template>
 
